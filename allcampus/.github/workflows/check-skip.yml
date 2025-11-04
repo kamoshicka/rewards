@@ -1,0 +1,25 @@
+name: check-skip
+run-name: "${{ github.actor }} - ${{ github.event.pull_request.title }} (${{ github.head_ref }})"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths: 
+      - .github/workflows/check-skip.yml
+      - '**'
+      - '!backend/**'
+      - '!frontend/share/**'
+      - '!frontend/campus/**'
+      - '!frontend/gakumu/**'
+
+jobs:
+  BUILD:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: OK
+        run: |
+          echo OK

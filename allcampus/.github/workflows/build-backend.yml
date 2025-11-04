@@ -1,0 +1,47 @@
+name: ビルド Backend
+run-name: "${{ github.actor }} - ${{ github.event.pull_request.title }} (${{ github.head_ref }})"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths: 
+      - .github/workflows/build-backend.yml
+      - backend/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  BUILD:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          lfs: true
+          sparse-checkout: |
+            backend/
+
+      - uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4.7.0
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: 'maven'
+
+      - name: Maven(バックエンド)ビルド
+        run: |
+          cd backend 
+          mvn package -DskipTests=true
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: all-campus-api
+          path: backend/api/target/all-campus-api.jar

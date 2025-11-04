@@ -1,0 +1,44 @@
+name: 定期実行テスト
+
+on:
+  schedule:
+    # 毎日15時(JST) → UTCでは6時
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: gakumuにチェックイン
+        run: |
+          npm ci --prefix frontend/gakumu
+          npm ci --prefix frontend/share
+
+
+      - name: テスト実行
+        run: |
+          cd frontend/share
+          npm install
+          cd ../gakumu
+          npm install
+          npm run test
+
+      - name: campusにチェックイン
+        run: |
+          npm ci --prefix frontend/campus
+
+      - name: テスト実行
+        run: |
+          cd frontend/campus
+          npm install
+          npm run test

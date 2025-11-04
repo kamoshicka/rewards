@@ -1,0 +1,56 @@
+name: Auto-Merge
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    if: ${{ github.event.pull_request.draft == false && github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: ユーザーチェック
+        id: check_committer
+        run: |
+          echo "Checking for commits by '${{ vars.MTAKEUCHIVARIABLE }}'..."
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO="${{ github.repository }}"
+          TARGET_NAME="${{ vars.MTAKEUCHIVARIABLE }}"
+      
+          COMMITS=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/commits" \
+            | jq -r '.[].commit.author.name')
+      
+          echo "Found commit authors:"
+          echo "$COMMITS"
+      
+          if echo "$COMMITS" | grep -q "^$TARGET_NAME$"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          sparse-checkout: |
+            .github
+            
+      - name: プルリクを自動マージ
+        if: steps.check_committer.outputs.skip == 'false'
+        uses: nick-fields/retry@ce71cc2ab81d554ebbe88c79ab5975992d79ba08 # v3.0.2
+        with:
+          timeout_seconds: 10
+          max_attempts: 3
+          command: |
+            gh pr merge --auto --merge "${GITHUB_HEAD_REF}"
