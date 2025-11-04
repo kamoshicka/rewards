@@ -1,0 +1,63 @@
+{
+  "name": "gakumu",
+  "description": "ALLきゃんぱす 学務情報フロントエンド",
+  "author": "AILESYSTEM, CO., LTD.",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build-dev": "vite build",
+    "build-pt": "vite build --mode pt --base /CS/ ",
+    "build-st": "vite build --mode st --base /CS/",
+    "build-staging": "vite build --mode staging",
+    "build-production": "vite build --mode production --base /CS/",
+    "build-tsv": "vite build --mode tsv",
+    "preview": "vite preview",
+    "preview-pt": "vite preview --mode pt --base /CS/ ",
+    "preview-st": "vite preview --mode st --base /CS/",
+    "preview-production": "vite preview --mode production --base /CS/",
+    "test": "vitest",
+    "test-ui": "vitest --ui",
+    "test-coverage": "vitest run --coverage",
+    "gen-test": "node scripts/gen-test.js",
+    "graphql-codegen": "graphql-codegen --config ../../utilities/graphql-scaffold/graphql-codegen.ts"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
+    "axios": "^1.6.5",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "element-plus": "~2.4.1",
+    "graphql": "^16.8.1",
+    "graphql-request": "^6.1.0",
+    "graphql-ws": "^5.16.0",
+    "openai": "^5.16.0",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
+    "share": "^1.0.0",
+    "vue": "^3.5.13",
+    "vue-i18n": "^9.9.0",
+    "vue-router": "^4.2.5"
+  },
+  "volta": {
+    "node": "22.20.0",
+    "npm": "11.6.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/vue": "^8.1.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/ui": "^3.0.6",
+    "@vue/devtools": "^6.6.3",
+    "@vue/test-utils": "^2.4.6",
+    "chai-dom": "^1.12.1",
+    "jsdom": "^26.0.0",
+    "vite": "^4.4.5",
+    "vitest": "^3.0.6"
+  }
+}

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+(
+    cd frontend || exit
+    # 直前のヘッドとの差分を取得
+    if ! git diff --exit-code --quiet "HEAD@{1}" -- package.json package-lock.json; then
+        echo "⚡ frontendの package.json に変更があるため npm ci を実行します！！"
+        npm ci
+    fi
+)
